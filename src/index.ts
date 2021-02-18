@@ -3,16 +3,45 @@ import dotenv from "dotenv";
 import https from "https";
 import { promises as fs } from "fs";
 import path from "path";
+import mustache from "mustache";
 
 dotenv.config();
 const app = express();
 const PORT = 8000;
 
 app.get("/", async (req, res) => {
-  const filePath = path.join(__dirname, "data", "data.json");
-  const jsonData = await fs.readFile(filePath, "utf8");
+  const dataPath = path.join(__dirname, "data", "data.json");
+  const jsonData = await fs.readFile(dataPath, "utf8");
   const linkData = await JSON.parse(jsonData);
-  console.log(linkData);
+
+  const templatePath = path.join(__dirname, "index.html");
+  const template = await fs.readFile(templatePath, "utf8");
+
+  const page = req.query.page ? Number(req.query.page) : 1;
+  const offset = page * 10 - 10;
+  const view = {
+    links: linkData.slice(offset, offset + 10),
+    next: () => getNext(),
+    prev: () => getPrev(),
+  };
+
+  function getNext() {
+    if (offset + 10 >= linkData.length) {
+      return null;
+    } else {
+      return page + 1;
+    }
+  }
+
+  function getPrev() {
+    if (page === 0) {
+      return null;
+    } else {
+      return page - 1;
+    }
+  }
+
+  res.send(mustache.render(template, view));
 });
 
 app.get("/update", (req, res) => {
