@@ -7,6 +7,7 @@ import mustache from "mustache";
 
 dotenv.config();
 const app = express();
+app.use("/static", express.static(path.join(__dirname, "../", "public")));
 const PORT = 8000;
 
 app.get("/", async (req, res) => {
@@ -19,6 +20,7 @@ app.get("/", async (req, res) => {
 
   const page = req.query.page ? Number(req.query.page) : 1;
   const offset = page * 10 - 10;
+
   const view = {
     links: linkData.slice(offset, offset + 10),
     next: () => getNext(),
@@ -32,7 +34,6 @@ app.get("/", async (req, res) => {
       return page + 1;
     }
   }
-
   function getPrev() {
     if (page === 0) {
       return null;
@@ -40,7 +41,6 @@ app.get("/", async (req, res) => {
       return page - 1;
     }
   }
-
   res.send(mustache.render(template, view));
 });
 
@@ -67,6 +67,5 @@ app.get("/update", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(process.env.PINBOARD_TOKEN);
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });

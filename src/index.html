@@ -4,23 +4,39 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/blocks.css/dist/blocks.min.css"
+    />
+    <link rel="stylesheet" href="/static/index.css" />
     <title>a list of links</title>
   </head>
-  <body>
-    <h1>A List of Links</h1>
-    {{#links}}
-    <div>
-      <a href="{{href}}">{{description}}</a>
-      <p>{{extended}}</p>
+  <body class="">
+    <div class="block accent">
+      <h1>a list of links</h1>
+      <p>
+        An ongoing curated list of links I think other people might find
+        interesting. Pulled automatically from my bookmarks.
+      </p>
     </div>
-    {{/links}}
 
-    <div>
-      {{#prev}}
-      <a href="/?page={{prev}}">prev</a>
-      {{/prev}} {{#next}}
-      <a href="/?page={{next}}">next</a>
+    <divclass="nav">
+      {{^prev}}
+      <span class="block inline fixed nav-item accent nav-item--blocked">prev</span>
+      {{/prev}} {{#prev}}
+      <a class="block inline nav-item accent" href="/?page={{prev}}">prev</a>
+      {{/prev}} {{^next}}
+      <span class="block inline fixed nav-item accent nav-item--blocked">next</span>
+      {{/next}} {{#next}}
+      <a class="block inline nav-item accent" href="/?page={{next}}">next</a>
       {{/next}}
     </div>
+
+    {{#links}}
+    <div class="block item">
+      <a class="item__link" href="{{href}}">{{description}}</a>
+      <p class="item__description">{{extended}}</p>
+    </div>
+    {{/links}}
   </body>
 </html>

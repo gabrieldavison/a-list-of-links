@@ -1,0 +1,26 @@
+/* :root {
+  --block-text-color: white;
+  --block-background-color: black;
+} */
+
+body {
+  width: 900px;
+}
+.item {
+  margin-top: 2em;
+}
+.item__link {
+  margin: 0.2em;
+}
+.item__description {
+  margin: 0.2em;
+}
+.nav-item {
+  display: inline-block;
+  margin-left: 6px !important;
+  margin-right: 6px !important;
+  font-size: 1.2em !important;
+}
+.nav-item--blocked {
+  color: var(--block-accent-color) !important;
+}
