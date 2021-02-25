@@ -12,7 +12,7 @@ const templatePath = path.join(__dirname, "../", "templates", "index.html");
 
 const app = express();
 app.use("/static", express.static(path.join(__dirname, "../", "public")));
-const PORT = 8000;
+const PORT = process.env.PORT;
 updateData()
 
 app.get("/", async (req, res) => {

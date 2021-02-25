@@ -51,7 +51,7 @@ var dataPath = path_1.default.join(__dirname, "../", "data", "data.json");
 var templatePath = path_1.default.join(__dirname, "../", "templates", "index.html");
 var app = express_1.default();
 app.use("/static", express_1.default.static(path_1.default.join(__dirname, "../", "public")));
-var PORT = 8000;
+var PORT = process.env.PORT;
 updateData();
 app.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     function getNext() {
