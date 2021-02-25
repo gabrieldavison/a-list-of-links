@@ -1,16 +1,19 @@
-/* :root {
-  --block-text-color: white;
-  --block-background-color: black;
-} */
+html {
+  font-family: monospace;
+}
 
 body {
-  width: 900px;
+  max-width: 900px;
+}
+.sub-heading {
+  font-size: 1.2em;
 }
 .item {
   margin-top: 2em;
 }
 .item__link {
   margin: 0.2em;
+  font-size: 1.2em;
 }
 .item__description {
   margin: 0.2em;
@@ -24,3 +27,5 @@ body {
 .nav-item--blocked {
   color: var(--block-accent-color) !important;
 }
+a {
+  color: var(--block-accent-color)

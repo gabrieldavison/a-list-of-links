@@ -4,18 +4,22 @@ import https from "https";
 import { promises as fs } from "fs";
 import path from "path";
 import mustache from "mustache";
-
 dotenv.config();
+
+const publicBookmarkTag = process.env.PUBLIC_TAG
+const dataPath = path.join(__dirname, "../", "data", "data.json");
+const templatePath = path.join(__dirname, "../", "templates", "index.html");
+
 const app = express();
 app.use("/static", express.static(path.join(__dirname, "../", "public")));
 const PORT = 8000;
+updateData()
 
 app.get("/", async (req, res) => {
-  const dataPath = path.join(__dirname, "data", "data.json");
+  
   const jsonData = await fs.readFile(dataPath, "utf8");
   const linkData = await JSON.parse(jsonData);
 
-  const templatePath = path.join(__dirname, "index.html");
   const template = await fs.readFile(templatePath, "utf8");
 
   const page = req.query.page ? Number(req.query.page) : 1;
@@ -44,8 +48,14 @@ app.get("/", async (req, res) => {
   res.send(mustache.render(template, view));
 });
 
-app.get("/update", (req, res) => {
-  const reqURL = `https://api.pinboard.in/v1/posts/all?format=json&tag=shareList&auth_token=${process.env.PINBOARD_TOKEN}`;
+app.get("/update", updateData);
+
+app.listen(PORT, () => {
+  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+});
+
+function updateData() {
+  const reqURL = `https://api.pinboard.in/v1/posts/all?format=json&tag=${publicBookmarkTag}&auth_token=${process.env.PINBOARD_TOKEN}`;
   https
     .get(reqURL, (resp) => {
       let body = "";
@@ -54,18 +64,10 @@ app.get("/update", (req, res) => {
       });
       resp.on("end", () => {
         try {
-          const filePath = path.join(__dirname, "data", "data.json");
-          fs.writeFile(filePath, body);
+          fs.writeFile(dataPath, body);
         } catch (e) {
           console.log(e);
         }
       });
     })
-    .on("error", (err) => {
-      res.send("Error: " + err.message);
-    });
-});
-
-app.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-});
+}
